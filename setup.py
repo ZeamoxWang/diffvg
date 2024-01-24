@@ -5,6 +5,7 @@ import sys
 import platform
 import subprocess
 import importlib
+import sysconfig
 from sysconfig import get_paths
 
 import importlib
@@ -35,8 +36,10 @@ class Build(build_ext):
             extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
             info = get_paths()
             include_path = info['include']
+            #libdir = sysconfig.get_config_var('LIBDIR')
+            libdir = os.path.join(sysconfig.get_config_var('base'), 'libs')
             cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
-                          '-DPYTHON_LIBRARY=' + get_config_var('LIBDIR'),
+                          '-DPYTHON_LIBRARY=' + libdir,
                           '-DPYTHON_INCLUDE_PATH=' + include_path]
 
             cfg = 'Debug' if self.debug else 'Release'
